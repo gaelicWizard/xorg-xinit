@@ -123,6 +123,9 @@ char *server_names[] = {
 #ifdef XFREE86
     "XFree86     XFree86 displays",
 #endif
+#ifdef XORG
+    "Xorg	 X.Org displays",
+#endif
 #ifdef __DARWIN__
     "XDarwin         Darwin/Mac OS X IOKit displays",
     "XDarwinQuartz   Mac OS X Quartz displays",

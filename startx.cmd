@@ -15,7 +15,7 @@ ADDRESS CMD
 env = 'OS2ENVIRONMENT'
 x11root = VALUE('X11ROOT',,env)
 IF x11root = '' THEN DO
-	SAY "The environment variable X11ROOT is not set. XFree86/OS2 won't run without it."
+	SAY "The environment variable X11ROOT is not set. X/OS2 won't run without it."
 	EXIT
 END
 

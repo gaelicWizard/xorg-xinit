@@ -1,4 +1,5 @@
 .\" $Xorg: startx.man,v 1.4 2001/02/09 02:05:49 xorgcvs Exp $
+.\" $XdotOrg: xc/programs/xinit/startx.man,v 1.2 2004/04/23 19:54:49 eich Exp $
 .\" Copyright 1993, 1998  The Open Group
 .\" 
 .\" Permission to use, copy, modify, distribute, and sell this software and its
@@ -58,9 +59,9 @@ per-session basis the
 default color depth, the server's notion of the number of dots-per-inch the
 display device presents, or take advantage of a different server layout, as
 permitted by the
-.IR XFree86 (1)
+.IR __XSERVERNAME__ (1)
 server and specified in the
-.IR XF86Config (__filemansuffix__)
+.IR __XCONFIGFILE__ (__filemansuffix__)
 file.  Some examples of specifying server arguments follow; consult the
 manual page for your X server to determine which arguments are legal.
 .RS
@@ -186,4 +187,4 @@ file.
 .SH "SEE ALSO"
 .IR xinit (1),
 .IR Xserver (1),
-.IR XFree86 (1)
+.IR __XSERVERNAME__ (1)
