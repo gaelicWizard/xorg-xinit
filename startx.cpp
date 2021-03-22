@@ -120,7 +120,11 @@ enable_xauth=1
 XCOMM Automatically determine an unused $DISPLAY
 d=0
 while true ; do
-    [ -e "/tmp/.X$d-lock" -o -S "/tmp/.X11-unix/X$d" ] || break
+    [ -e "/tmp/.X$d-lock" -o -S "/tmp/.X11-unix/X$d" ] ||
+#ifdef __linux__
+        grep -q "/tmp/.X11-unix/X$d" "/proc/net/unix" ||
+#endif
+        break
     d=$(($d + 1))
 done
 defaultdisplay=":$d"
