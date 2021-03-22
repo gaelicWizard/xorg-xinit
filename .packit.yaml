@@ -1,0 +1,16 @@
+jobs:
+- job: copr_build
+  metadata:
+    targets:
+    - centos-stream-8-x86_64
+  trigger: pull_request
+- job: tests
+  metadata:
+    targets:
+    - centos-stream-8-x86_64
+  trigger: pull_request
+sources:
+- path: xinit-1.3.4.tar.bz2
+  url: https://git.centos.org/sources/xorg-x11-xinit/c8s/de3469080d73ced1f7d7a1803e813bc6ea352072
+specfile_path: SPECS/xorg-x11-xinit.spec
+upstream_ref: c8s-source-git
