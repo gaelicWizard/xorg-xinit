@@ -195,7 +195,7 @@ if [ x"$server" = x ]; then
     tty=$(tty)
     if expr match "$tty" '^/dev/tty[0-9]\+$' > /dev/null; then
         tty_num=$(echo "$tty" | grep -oE '[0-9]+$')
-        vtarg="vt$tty_num"
+        vtarg="vt$tty_num -keeptty"
     fi
 #endif
 
