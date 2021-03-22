@@ -225,8 +225,10 @@ for i in $serverargs; do
         have_vtarg="yes"
     fi
 done
-if [ "$have_vtarg" = "no" ]; then
+if [ "$have_vtarg" = "no" -a x"$vtarg" != x ]; then
     serverargs="$serverargs $vtarg"
+    XCOMM Fedora specific mod to make X run as non root
+    export XORG_RUN_AS_USER_OK=1
 fi
 
 XCOMM if no display, use default
