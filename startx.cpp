@@ -120,11 +120,7 @@ enable_xauth=1
 XCOMM Automatically determine an unused $DISPLAY
 d=0
 while true ; do
-    [ -e "/tmp/.X$d-lock" -o -S "/tmp/.X11-unix/X$d" ] ||
-#ifdef __linux__
-        grep -q "/tmp/.X11-unix/X$d" "/proc/net/unix" ||
-#endif
-        break
+    [ -e /tmp/.X$d-lock ] || break
     d=$(($d + 1))
 done
 defaultdisplay=":$d"
@@ -199,7 +195,7 @@ if [ x"$server" = x ]; then
     tty=$(tty)
     if expr match "$tty" '^/dev/tty[0-9]\+$' > /dev/null; then
         tty_num=$(echo "$tty" | grep -oE '[0-9]+$')
-        vtarg="vt$tty_num -keeptty"
+        vtarg="vt$tty_num"
     fi
 #endif
 
@@ -225,10 +221,8 @@ for i in $serverargs; do
         have_vtarg="yes"
     fi
 done
-if [ "$have_vtarg" = "no" -a x"$vtarg" != x ]; then
+if [ "$have_vtarg" = "no" ]; then
     serverargs="$serverargs $vtarg"
-    XCOMM Fedora specific mod to make X run as non root
-    export XORG_RUN_AS_USER_OK=1
 fi
 
 XCOMM if no display, use default

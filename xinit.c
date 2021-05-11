@@ -89,8 +89,6 @@ char xserverrcbuf[256];
 
 #define TRUE 1
 #define FALSE 0
-#define OK_EXIT 0
-#define ERR_EXIT 1
 
 static char *default_server = "X";
 static char *default_display = ":0";        /* choose most efficient */
@@ -562,7 +560,6 @@ startClient(char *client_argv[])
 {
     clientpid = fork();
     if (clientpid == 0) {
-        int fd;
         set_environment();
         setWindowPath();
 
@@ -570,16 +567,7 @@ startClient(char *client_argv[])
             Error("cannot change uid");
             _exit(EXIT_FAILURE);
         }
-        fd = open ("/dev/null", O_RDONLY);
-
-        if (fd < 0) {
-            Error("cannot open /dev/null: %s\n", strerror(errno));
-            _exit(ERR_EXIT);
-        }
-        close (STDIN_FILENO);
-        dup2 (fd, STDIN_FILENO);
-        close (fd);
-        setsid();
+        setpgid(0, getpid());
         Execute(client_argv);
         Error("Unable to run program \"%s\"", client_argv[0]);
 
