@@ -41,10 +41,6 @@ if [ -d "$oldbindir" ] ; then
         *) PATH=$PATH:$oldbindir ;;
     esac
 fi
-
-XCOMM Bourne shell does not automatically export modified environment variables
-XCOMM so export the new PATH just in case the user changes the shell
-export PATH
 #endif
 
 userclientrc="$HOME/.xinitrc"
