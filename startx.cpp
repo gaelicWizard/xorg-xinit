@@ -103,8 +103,10 @@ fi
 
 if [ x`defaults read $X11_PREFS_DOMAIN no_auth` = x0 ] ; then
     enable_xauth=1
+    EXEC=exec
 else
     enable_xauth=0
+    EXEC=
 fi
 
 if [ x`defaults read $X11_PREFS_DOMAIN nolisten_tcp` = x1 ] ; then
@@ -303,7 +305,7 @@ EOF
 fi
 
 #if defined(__APPLE__) || defined(__CYGWIN__)
-eval XINIT \"$client\" $clientargs -- \"$server\" $display $serverargs
+eval $EXEC XINIT \"$client\" $clientargs -- \"$server\" $display $serverargs
 #else
 XINIT "$client" $clientargs -- "$server" $display $serverargs
 #endif
