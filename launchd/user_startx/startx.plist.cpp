@@ -6,11 +6,19 @@
 	<string>BUNDLE_ID_PREFIX.startx</string>
 	<key>ProgramArguments</key>
 	<array>
+#ifdef LAUNCHAGENT_XINIT_ONLY
+		<string>__bindir__/xinit</string>
+#else
 		<string>__libexecdir__/launchd_startx</string>
 		<string>__bindir__/startx</string>
+#endif
 #ifdef LAUNCHAGENT_XSERVER_PATH
 		<string>--</string>
 		<string>LAUNCHAGENT_XSERVER_PATH</string>
+#ifdef LAUNCHAGENT_XINIT_ONLY
+		<string>-auth</string>
+		<string>/dev/null</string>
+#endif
 #endif
 	</array>
 	<key>EnvironmentVariables</key>
