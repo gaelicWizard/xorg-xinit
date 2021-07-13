@@ -16,13 +16,9 @@ unset SESSION_MANAGER
 
 #ifdef __APPLE__
 
-XCOMM Check for /usr/bin/X11 and BINDIR in the path, if not add them.
-XCOMM This allows startx to be placed in a place like /usr/bin or /usr/local/bin
+XCOMM Check for /usr/X11R6/bin and BINDIR in the path, if not add them.
+XCOMM This allows startx to be placed in a place like /usr/local/bin
 XCOMM and people may use X without changing their PATH.
-XCOMM Note that we put our own bin directory at the front of the path, and
-XCOMM the standard system path at the back, since if you are using the Xorg
-XCOMM server there's a pretty good chance you want to bias the Xorg clients
-XCOMM over the old system's clients.
 
 XCOMM First our compiled path
 bindir=__bindir__
