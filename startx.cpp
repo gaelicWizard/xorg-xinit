@@ -1,14 +1,14 @@
 XCOMM!SHELL_CMD
 
 XCOMM
-XCOMM This is just a sample implementation of a slightly less primitive
+XCOMM This is the standard implementation of a slightly less primitive
 XCOMM interface than xinit.  It looks for user .xinitrc and .xserverrc
 XCOMM files, then system xinitrc and xserverrc files, else lets xinit choose
-XCOMM its default.  The system xinitrc should probably do things like check
+XCOMM its default.  The system xinitrc probably does things like check
 XCOMM for .Xresources files and merge them in, start up a window manager,
 XCOMM and pop a clock and several xterms.
 XCOMM
-XCOMM Site administrators are STRONGLY urged to write nicer versions.
+XCOMM Site administrators have never in history written nicer versions.
 XCOMM
 
 unset DBUS_SESSION_BUS_ADDRESS
