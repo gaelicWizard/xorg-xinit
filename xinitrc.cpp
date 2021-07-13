@@ -1,5 +1,21 @@
 XCOMM!SHELL_CMD
 
+#ifdef __APPLE__
+cd "${HOME:=~}" XCOMM Start everything inside $HOME
+
+XCOMM if we are being run directly, and we are not a login shell, then re-exec as a login shell.
+if [[ "${BASH_SOURCE[0]}" == "$0" ]] && ! shopt -q login_shell; then
+	set -- "${0}" "${@}"
+	case $(basename "${SHELL}") in
+		bash)          exec -l "${SHELL}" --login -c 'exec "${@}"' - "${@}" ;;
+		ksh|sh|zsh)    exec -l "${SHELL}" -c 'exec "${@}"' - "${@}" ;;
+		csh|tcsh)      exec -l "${SHELL}" -c 'exec $argv:q' "${@}" ;;
+		es|rc)         exec -l "${SHELL}" -l -c 'exec $*' "${@}" ;;
+		*)             exec    "${@}" ;;
+	esac
+fi
+#endif
+
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
 sysresources=XINITDIR/.Xresources
