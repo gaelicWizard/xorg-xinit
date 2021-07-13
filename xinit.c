@@ -46,6 +46,7 @@ in this Software without prior written authorization from The Open Group.
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
 #include <vproc.h>
 #endif
+#include <asl.h>
 #endif
 
 /* For PRIO_PROCESS and setpriority() */
@@ -61,7 +62,7 @@ in this Software without prior written authorization from The Open Group.
 const char *bindir = BINDIR;
 const char * const server_names[] = {
 #ifdef __APPLE__
-    "Xquartz     Mac OSX Quartz displays.",
+    "Xquartz     Mac OS X Quartz displays.",
 #else
 # ifdef __CYGWIN__
     "XWin        X Server for the Cygwin environment on Microsoft Windows",
@@ -154,9 +155,15 @@ main(int argc, char *argv[])
     int start_of_client_args, start_of_server_args;
     struct sigaction sa, si;
 #ifdef __APPLE__
+    aslclient aslc;
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
     vproc_transaction_t vt;
 #endif
+
+    aslc = asl_open(BUNDLE_ID_PREFIX".startx", BUNDLE_ID_PREFIX, ASL_OPT_NO_DELAY);
+
+    asl_log_descriptor(aslc, NULL, ASL_LEVEL_INFO, STDOUT_FILENO, ASL_LOG_DESCRIPTOR_WRITE);
+    asl_log_descriptor(aslc, NULL, ASL_LEVEL_NOTICE, STDERR_FILENO, ASL_LOG_DESCRIPTOR_WRITE);
 #endif
 
     program = *argv++;
