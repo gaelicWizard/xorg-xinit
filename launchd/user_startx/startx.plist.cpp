@@ -3,27 +3,34 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-		<string>BUNDLE_ID_PREFIX.startx</string>
+	<string>BUNDLE_ID_PREFIX.startx</string>
 	<key>ProgramArguments</key>
-		<array>
-			<string>__libexecdir__/launchd_startx</string>
-			<string>__bindir__/startx</string>
+	<array>
+		<string>__libexecdir__/launchd_startx</string>
+		<string>__bindir__/startx</string>
 #ifdef LAUNCHAGENT_XSERVER_PATH
-			<string>--</string>
-			<string>LAUNCHAGENT_XSERVER_PATH</string>
+		<string>--</string>
+		<string>LAUNCHAGENT_XSERVER_PATH</string>
 #endif
-		</array>
+	</array>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>X11_PREFS_DOMAIN</key>
+		<string>BUNDLE_ID_PREFIX.X11</string>
+		<key>XINITRC</key>
+		<string>__sysconfdir__/X11/xinit/xinitrc</string>
+	</dict>
 	<key>Sockets</key>
+	<dict>
+		<key>BUNDLE_ID_PREFIX:0</key>
 		<dict>
-			<key>BUNDLE_ID_PREFIX:0</key>
-				<dict>
-					<key>SecureSocketWithKey</key>
-						<string>DISPLAY</string>
-				</dict>
+			<key>SecureSocketWithKey</key>
+			<string>DISPLAY</string>
 		</dict>
+	</dict>
 	<key>ServiceIPC</key>
-		<true/>
+	<true/>
 	<key>EnableTransactions</key>
-		<true/>
+	<true/>
 </dict>
 </plist>
