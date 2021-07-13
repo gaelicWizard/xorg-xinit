@@ -67,32 +67,16 @@ if [ "x$X11_PREFS_DOMAIN" = x ] ; then
     export X11_PREFS_DOMAIN=BUNDLE_ID_PREFIX".X11"
 fi
 
-XCOMM Initialize defaults (this will cut down on "safe" error messages)
-if ! defaults read $X11_PREFS_DOMAIN cache_fonts > /dev/null 2>&1 ; then
-    defaults write $X11_PREFS_DOMAIN cache_fonts -bool true
-fi
-
-if ! defaults read $X11_PREFS_DOMAIN no_auth > /dev/null 2>&1 ; then
-    defaults write $X11_PREFS_DOMAIN no_auth -bool false
-fi
-
-if ! defaults read $X11_PREFS_DOMAIN nolisten_tcp > /dev/null 2>&1 ; then
-    defaults write $X11_PREFS_DOMAIN nolisten_tcp -bool true
-fi
-
-if ! defaults read $X11_PREFS_DOMAIN enable_iglx > /dev/null 2>&1 ; then
-    defaults write $X11_PREFS_DOMAIN enable_iglx -bool false
-fi
-
 XCOMM First, start caching fonts
-if [ x`defaults read $X11_PREFS_DOMAIN cache_fonts` = x1 ] ; then
-    if [ -x $bindir/font_cache ] ; then
-        $bindir/font_cache &
-    elif [ -x $bindir/font_cache.sh ] ; then
-        $bindir/font_cache.sh &
-    elif [ -x $bindir/fc-cache ] ; then
-        $bindir/fc-cache &
-    fi
+: ${X11_CACHE_FONTS:=$(defaults read $X11_PREFS_DOMAIN cache_fonts 2>/dev/null)}
+if [ "x${X11_CACHE_FONTS:=1}" = x1 ] ; then
+	if [ -x $bindir/font_cache ] ; then
+		$bindir/font_cache &
+	elif [ -x $bindir/font_cache.sh ] ; then
+		$bindir/font_cache.sh &
+	elif [ -x $bindir/fc-cache ] ; then
+		$bindir/fc-cache &
+	fi
 fi
 
 if [ -x __libexecdir__/privileged_startx ] ; then
@@ -101,7 +85,8 @@ if [ -x __libexecdir__/privileged_startx ] ; then
 	__libexecdir__/privileged_startx
 fi
 
-if [ x`defaults read $X11_PREFS_DOMAIN no_auth` = x0 ] ; then
+: ${X11_NO_AUTH:=$(defaults read $X11_PREFS_DOMAIN no_auth 2>/dev/null)}
+if [ "x${X11_NO_AUTH:=0}" = x0 ] ; then
     enable_xauth=1
     EXEC=exec
 else
@@ -109,22 +94,23 @@ else
     EXEC=
 fi
 
-if [ x`defaults read $X11_PREFS_DOMAIN nolisten_tcp` = x1 ] ; then
+: ${X11_NOLISTEN_TCP:=$(defaults read $X11_PREFS_DOMAIN nolisten_tcp 2>/dev/null)}
+if [ "x${X11_NOLISTEN_TCP:=1}" = x1 ] ; then
     defaultserverargs="$defaultserverargs -nolisten tcp"
 else
     defaultserverargs="$defaultserverargs -listen tcp"
 fi
 
-if [ x`defaults read $X11_PREFS_DOMAIN enable_iglx` = x1 ] ; then
+: ${X11_ENABLE_IGLX:=$(defaults read $X11_PREFS_DOMAIN enable_iglx 2>/dev/null)}
+if [ "x${X11_ENABLE_IGLX:=0}" = x1 ] ; then
 	defaultserverargs="$defaultserverargs +iglx +extension GLX"
 else
     defaultserverargs="$defaultserverargs -iglx"
 fi
 
-XCOMM The second check is the real one.  The first is to hopefully avoid
-XCOMM needless syslog spamming.
-if defaults read $X11_PREFS_DOMAIN 2> /dev/null | grep -q 'dpi' && defaults read $X11_PREFS_DOMAIN dpi > /dev/null 2>&1 ; then
-    defaultserverargs="$defaultserverargs -dpi `defaults read $X11_PREFS_DOMAIN dpi`"
+: ${X11_DPI:=$(defaults read $X11_PREFS_DOMAIN dpi 2>/dev/null)}
+if [ "x${X11_DPI:-}" != x ] ; then
+    defaultserverargs="$defaultserverargs -dpi $X11_DPI"
 fi
 
 #else
