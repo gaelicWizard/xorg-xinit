@@ -155,15 +155,19 @@ main(int argc, char *argv[])
     int start_of_client_args, start_of_server_args;
     struct sigaction sa, si;
 #ifdef __APPLE__
-    aslclient aslc;
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
     vproc_transaction_t vt;
 #endif
 
-    aslc = asl_open(BUNDLE_ID_PREFIX".startx", BUNDLE_ID_PREFIX, ASL_OPT_NO_DELAY);
+    aslclient aslc = asl_open(BUNDLE_ID_PREFIX".xinit", BUNDLE_ID_PREFIX, ASL_OPT_NO_DELAY);
 
     asl_log_descriptor(aslc, NULL, ASL_LEVEL_INFO, STDOUT_FILENO, ASL_LOG_DESCRIPTOR_WRITE);
     asl_log_descriptor(aslc, NULL, ASL_LEVEL_NOTICE, STDERR_FILENO, ASL_LOG_DESCRIPTOR_WRITE);
+
+    /* https://github.com/XQuartz/XQuartz/issues/114 */
+    char const * const home = getenv("HOME");
+    assert(home);
+    chdir(home);
 #endif
 
     program = *argv++;
