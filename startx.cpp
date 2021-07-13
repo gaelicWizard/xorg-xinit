@@ -47,10 +47,10 @@ XCOMM so export the new PATH just in case the user changes the shell
 export PATH
 #endif
 
-userclientrc=$HOME/.xinitrc
+userclientrc="$HOME/.xinitrc"
 sysclientrc=XINITDIR/xinitrc
 
-userserverrc=$HOME/.xserverrc
+userserverrc="$HOME/.xserverrc"
 sysserverrc=XINITDIR/xserverrc
 defaultclient=XTERM
 defaultserver=XSERVER
@@ -96,8 +96,8 @@ if [ x`defaults read $X11_PREFS_DOMAIN cache_fonts` = x1 ] ; then
 fi
 
 if [ -x __libexecdir__/privileged_startx ] ; then
-	# Don't push this into the background because it can cause
-	# a race to create /tmp/.X11-unix
+	XCOMM Don't push this into the background because it can cause
+	XCOMM a race to create /tmp/.X11-unix
 	__libexecdir__/privileged_startx
 fi
 
@@ -114,7 +114,7 @@ else
 fi
 
 if [ x`defaults read $X11_PREFS_DOMAIN enable_iglx` = x1 ] ; then
-    defaultserverargs="$defaultserverargs +iglx +extension GLX"
+	defaultserverargs="$defaultserverargs +iglx +extension GLX"
 else
     defaultserverargs="$defaultserverargs -iglx"
 fi
@@ -206,7 +206,7 @@ if [ x"$server" = x ]; then
     XCOMM "https://bugzilla.redhat.com/show_bug.cgi?id=806491"
     tty=$(tty)
     if expr "$tty" : '/dev/tty[0-9][0-9]*$' > /dev/null; then
-        tty_num=${tty#/dev/tty}
+		tty_num=${tty#/dev/tty}
         vtarg="vt$tty_num -keeptty"
     fi
 #endif
@@ -244,14 +244,14 @@ fi
 
 if [ x"$enable_xauth" = x1 ] ; then
     if [ x"$XAUTHORITY" = x ]; then
-        XAUTHORITY=$HOME/.Xauthority
+        XAUTHORITY="$HOME/.Xauthority"
         export XAUTHORITY
     fi
 
     removelist=
 
     XCOMM set up default Xauth info for this machine
-    hostname=`uname -n`
+	hostname=`uname -n`
 
     authdisplay=${display:-:0}
 #if defined(HAS_COOKIE_MAKER) && defined(MK_COOKIE)
@@ -270,7 +270,7 @@ if [ x"$enable_xauth" = x1 ] ; then
     dummy=0
 
     XCOMM create a file with auth information for the server. ':0' is a dummy.
-    xserverauthfile=$HOME/.serverauth.$$
+    xserverauthfile="$HOME/.serverauth.$$"
     trap "rm -f '$xserverauthfile'" HUP INT QUIT ILL TRAP KILL BUS TERM
     xauth -q -f "$xserverauthfile" << EOF
 add :$dummy . $mcookie
