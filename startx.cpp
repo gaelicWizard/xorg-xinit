@@ -252,12 +252,12 @@ if [ x"$enable_xauth" = x1 ] ; then
     dummy=0
 
     XCOMM create a file with auth information for the server. ':0' is a dummy.
-    xserverauthfile="$HOME/.serverauth.$$"
+    xserverauthfile="${XDG_RUNTIME_DIR:-${TMPDIR:-$HOME}}/.Xauthority.$$"
     trap "rm -f '$xserverauthfile'" HUP INT QUIT ILL TRAP KILL BUS TERM
     xauth -q -f "$xserverauthfile" << EOF
 add :$dummy . $mcookie
 EOF
-#if defined(__APPLE__) || defined(__CYGWIN__)
+#if defined(__CYGWIN__)
     xserverauthfilequoted=$(echo ${xserverauthfile} | sed "s/'/'\\\\''/g")
     serverargs=${serverargs}" -auth '"${xserverauthfilequoted}"'"
 #else
@@ -284,10 +284,10 @@ EOF
     done
 fi
 
-#if defined(__APPLE__) || defined(__CYGWIN__)
+#if defined(__CYGWIN__)
 eval $EXEC XINIT \"$client\" $clientargs -- \"$server\" $display $serverargs
 #else
-XINIT "$client" $clientargs -- "$server" $display $serverargs
+$EXEC XINIT "$client" $clientargs -- "$server" $display $serverargs
 #endif
 retval=$?
 
