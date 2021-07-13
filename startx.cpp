@@ -231,10 +231,8 @@ if [ x"$display" = x ]; then
 fi
 
 if [ x"$enable_xauth" = x1 ] ; then
-    if [ x"$XAUTHORITY" = x ]; then
-        XAUTHORITY="$HOME/.Xauthority"
-        export XAUTHORITY
-    fi
+	: ${XAUTHORITY:=$HOME/.Xauthority}
+	export XAUTHORITY
 
     removelist=
 
