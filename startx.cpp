@@ -93,8 +93,6 @@ fi
 : ${X11_NOLISTEN_TCP:=$(defaults read $X11_PREFS_DOMAIN nolisten_tcp 2>/dev/null)}
 if [ "x${X11_NOLISTEN_TCP:=1}" = x1 ] ; then
     defaultserverargs="$defaultserverargs -nolisten tcp"
-else
-    defaultserverargs="$defaultserverargs -listen tcp"
 fi
 
 : ${X11_ENABLE_IGLX:=$(defaults read $X11_PREFS_DOMAIN enable_iglx 2>/dev/null)}
