@@ -12,13 +12,13 @@
 		<string>__libexecdir__/launchd_startx</string>
 		<string>__bindir__/startx</string>
 #endif
-#ifdef LAUNCHAGENT_XSERVER_PATH
 		<string>--</string>
+#ifdef LAUNCHAGENT_XSERVER_PATH
 		<string>LAUNCHAGENT_XSERVER_PATH</string>
-#ifdef LAUNCHAGENT_XINIT_ONLY
-		<string>-auth</string>
-		<string>/dev/null</string>
 #endif
+#ifdef LAUNCHAGENT_XAUTH
+		<string>-auth</string>
+		<string>LAUNCHAGENT_XAUTH</string>
 #endif
 	</array>
 	<key>EnvironmentVariables</key>
