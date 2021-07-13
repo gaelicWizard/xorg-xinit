@@ -92,10 +92,8 @@ if [ "x${X11_NOLISTEN_TCP:=1}" = x1 ] ; then
 fi
 
 : ${X11_ENABLE_IGLX:=$(defaults read $X11_PREFS_DOMAIN enable_iglx 2>/dev/null)}
-if [ "x${X11_ENABLE_IGLX:=0}" = x1 ] ; then
+if [ "x${X11_ENABLE_IGLX:=0}" != x0 ] ; then
 	defaultserverargs="$defaultserverargs +iglx +extension GLX"
-else
-    defaultserverargs="$defaultserverargs -iglx"
 fi
 
 : ${X11_DPI:=$(defaults read $X11_PREFS_DOMAIN dpi 2>/dev/null)}
