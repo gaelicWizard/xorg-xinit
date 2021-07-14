@@ -26,6 +26,8 @@
  * prior written authorization.
  */
 
+#include <CoreFoundation/CoreFoundation.h>
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
@@ -39,8 +41,16 @@
 #include <stdlib.h>
 #include <spawn.h>
 
+static char *
+command_from_prefs(const char *key, const char *default_value);
+
+#define DEFAULT_STARTX X11BINDIR "/startx -- " X11BINDIR "/Xquartz"
+
+static const char *x11_prefs_domain = NULL;
+
 int main(int argc, char **argv, char **envp) {
     aslclient aslc;
+    const char *newargv[4];
     pid_t child;
     int pstat;
 
@@ -59,8 +69,71 @@ int main(int argc, char **argv, char **envp) {
     assert(home);
     chdir(home);
 
-    assert(posix_spawnp(&child, argv[1], NULL, NULL, &argv[1], envp) == 0);
+	if (!(x11_prefs_domain = getenv("X11_PREFS_DOMAIN")))
+		setenv("X11_PREFS_DOMAIN", x11_prefs_domain = BUNDLE_ID_PREFIX".X11", FALSE);
+
+    newargv[0] = command_from_prefs("login_shell", SHELL_CMD);
+    newargv[1] = "-c";
+    newargv[2] = command_from_prefs("startx_script", DEFAULT_STARTX);
+    newargv[3] = NULL;
+
+    assert(posix_spawnp(&child, newargv[0], NULL, NULL, (char *const *)newargv, envp) == 0);
     wait4(child, &pstat, 0, (struct rusage *)0);
 
     return pstat;
+}
+
+static char *
+command_from_prefs(const char *key, const char *default_value)
+{
+    char *command = NULL;
+
+    CFStringRef cfKey;
+    CFPropertyListRef PlistRef;
+
+    if (!key)
+        return NULL;
+
+    cfKey = CFStringCreateWithCString(NULL, key, kCFStringEncodingASCII);
+
+    if (!cfKey)
+        return NULL;
+
+    PlistRef = CFPreferencesCopyAppValue(cfKey,
+                                         x11_prefs_domain);
+
+    if ((PlistRef == NULL) ||
+        (CFGetTypeID(PlistRef) != CFStringGetTypeID())) {
+        CFStringRef cfDefaultValue = CFStringCreateWithCString(
+            NULL, default_value, kCFStringEncodingASCII);
+        int len = strlen(default_value) + 1;
+
+        if (!cfDefaultValue)
+            goto command_from_prefs_out;
+
+        CFPreferencesSetAppValue(cfKey, cfDefaultValue,
+                                 x11_prefs_domain);
+        CFPreferencesAppSynchronize(x11_prefs_domain);
+        CFRelease(cfDefaultValue);
+
+        command = (char *)malloc(len * sizeof(char));
+        if (!command)
+            goto command_from_prefs_out;
+        strcpy(command, default_value);
+    }
+    else {
+        int len = CFStringGetLength((CFStringRef)PlistRef) + 1;
+        command = (char *)malloc(len * sizeof(char));
+        if (!command)
+            goto command_from_prefs_out;
+        CFStringGetCString((CFStringRef)PlistRef, command, len,
+                           kCFStringEncodingASCII);
+    }
+
+command_from_prefs_out:
+    if (PlistRef)
+        CFRelease(PlistRef);
+    if (cfKey)
+        CFRelease(cfKey);
+    return command;
 }
