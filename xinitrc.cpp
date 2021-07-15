@@ -24,15 +24,7 @@ sysmodmap=XINITDIR/.Xmodmap
 XCOMM merge in defaults and keymaps
 
 if [ -f $sysresources ]; then
-#ifdef __APPLE__
-    if [ -x /usr/bin/cpp ] ; then
-        XRDB -merge $sysresources
-    else
-        XRDB -nocpp -merge $sysresources
-    fi
-#else
     XRDB -merge $sysresources
-#endif
 fi
 
 if [ -f $sysmodmap ]; then
@@ -40,15 +32,7 @@ if [ -f $sysmodmap ]; then
 fi
 
 if [ -f "$userresources" ]; then
-#ifdef __APPLE__
-    if [ -x /usr/bin/cpp ] ; then
-        XRDB -merge "$userresources"
-    else
-        XRDB -nocpp -merge "$userresources"
-    fi
-#else
     XRDB -merge "$userresources"
-#endif
 fi
 
 if [ -f "$usermodmap" ]; then
