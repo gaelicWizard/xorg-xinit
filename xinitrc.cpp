@@ -16,8 +16,8 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]] && ! shopt -q login_shell; then
 fi
 #endif
 
-userresources=$HOME/.Xresources
-usermodmap=$HOME/.Xmodmap
+userresources=${XDG_CONFIG_HOME:-$HOME/.}${XDG_CONFIG_HOME+/X11/}Xresources
+usermodmap=${XDG_CONFIG_HOME:-$HOME/.}${XDG_CONFIG_HOME+/X11/}Xmodmap
 sysresources=XINITDIR/.Xresources
 sysmodmap=XINITDIR/.Xmodmap
 
